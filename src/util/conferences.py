@@ -1,3 +1,4 @@
+import os
 import pathlib
 from datetime import datetime
 
@@ -5,11 +6,8 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 
-import os
-import re
-
 PERSCONFERENTIES_API_URL = 'https://www.rijksoverheid.nl/onderwerpen/coronavirus-covid-19/coronavirus-beeld-en-video/videos-persconferenties'
-RIJKSOVERHEID_URL = 'http://www.rijksoverheid.nl'
+RIJKSOVERHEID_URL = 'https://www.rijksoverheid.nl'
 CONFERENCE_OUTPUT_FOLDER = '../input/conferences/'
 
 
@@ -45,47 +43,63 @@ def download_conferences():
         soup = BeautifulSoup(response_text.content, "html.parser")
         raw_paragraphs = soup.find_all('p')
         date_row = raw_paragraphs[0].get_text()
-        texts = [p.get_text() for p in raw_paragraphs[1:]]
+        texts = [p.get_text() for p in raw_paragraphs[2:]]
         file_name = f"{CONFERENCE_OUTPUT_FOLDER}/{get_date(date_row)}.txt"
         with open(file_name, "w", encoding='utf-8') as txt_file:
             txt_file.write('\n'.join(texts))
 
 
-def preprocess():
-    conference_paths = os.listdir('../input/toespraken/')
-    conference_texts = []
+def _preprocess_conference_data(conference_data: list):
+    """
+    Preprocesses the text of a single conference
+    Todo.
+    """
 
-    for conference in conference_paths:
-        with open(os.path.join('../input/toespraken/', conference), "r", encoding='utf-8') as f:
-            conference_texts.append( {'filename': conference, 'text': f.readlines() } )
-    
     # Starts with saving text for Rutte
     save_text = 'rutte'
     words = set()
-    all_text_rutte, all_text_de_jonge = [], []
-    
+
     # Only keep the sentences of Rutte and De Jonge
-    for conference in conference_texts:
-        text_rutte, text_de_jonge = [], []
-        for line in conference['text'][3:]:
-            if save_text == 'rutte':
-                text_rutte.append(line)
-            if save_text == 'de jonge':
-                text_de_jonge.append(line)
+    text_rutte, text_de_jonge = [], []
+    for line in conference_data:
+        if save_text == 'rutte':
+            text_rutte.append(line)
+        if save_text == 'de jonge':
+            text_de_jonge.append(line)
 
-            if line.isupper():    
-                if 'RUT' in line:
-                    save_text='rutte'
-                elif 'DE JONGE' in line:
-                    save_text='de jonge'
+        if line.isupper():
+            if 'RUT' in line:
+                save_text = 'rutte'
+            elif 'DE JONGE' in line:
+                save_text = 'de jonge'
+            else:
+                words.add(line)
+                save_text = 'other'
 
-                else:
-                    words.add(line)
-                    save_text=False
+    return text_rutte, text_de_jonge
 
-        conference_date = conference['filename'][0:-4]
 
-        all_text_rutte.append( {'date': conference_date, 'text': text_rutte } )
-        all_text_de_jonge.append( { 'date': conference_date, 'text': text_de_jonge })
-        
-    return (all_text_rutte, all_text_de_jonge
+def _preprocess_all_conferences():
+    """
+    Todo.
+    """
+    conference_paths = os.listdir(CONFERENCE_OUTPUT_FOLDER)
+    all_text_rutte, all_text_de_jonge = [], []
+
+    for conf_file_name in conference_paths:
+        with open(f"{CONFERENCE_OUTPUT_FOLDER}/{conf_file_name}", "r", encoding='utf-8') as f:
+            text_rutte, text_de_jonge = _preprocess_conference_data(f.readlines())
+            conf_date = conf_file_name.replace('.txt', '')
+            all_text_rutte.append({'date': conf_date, 'text': text_rutte})
+            all_text_de_jonge.append({'date': conf_date, 'text': text_de_jonge})
+
+    return all_text_rutte, all_text_de_jonge
+
+
+def get_conference_data():
+    """
+    Todo.
+    """
+    if not os.listdir(CONFERENCE_OUTPUT_FOLDER):
+        download_conferences()
+    return _preprocess_all_conferences()

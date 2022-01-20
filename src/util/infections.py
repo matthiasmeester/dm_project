@@ -8,7 +8,7 @@ BESMETTINGEN_CSV_URL = 'https://data.rivm.nl/covid-19/COVID-19_aantallen_gemeent
 
 def download_infections() -> pd.DataFrame:
     """
-    Downloads the infections of the Rivm url
+    Downloads the infections of the RIVM url
 
     :return: dataframe with the raw infection data
     """
