@@ -5,6 +5,9 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 
+import os
+import re
+
 PERSCONFERENTIES_API_URL = 'https://www.rijksoverheid.nl/onderwerpen/coronavirus-covid-19/coronavirus-beeld-en-video/videos-persconferenties'
 RIJKSOVERHEID_URL = 'http://www.rijksoverheid.nl'
 CONFERENCE_TXT_FOLDER = '../input/conferences/'
@@ -49,4 +52,40 @@ def download_conferences():
 
 
 def preprocess():
-    pass
+    conference_paths = os.listdir('../input/toespraken/')
+    conference_texts = []
+
+    for conference in conference_paths:
+        with open(os.path.join('../input/toespraken/', conference), "r", encoding='utf-8') as f:
+            conference_texts.append( {'filename': conference, 'text': f.readlines() } )
+    
+    # Starts with saving text for Rutte
+    save_text = 'rutte'
+    words = set()
+    all_text_rutte, all_text_de_jonge = [], []
+    
+    # Only keep the sentences of Rutte and De Jonge
+    for conference in conference_texts:
+        text_rutte, text_de_jonge = [], []
+        for line in conference['text'][3:]:
+            if save_text == 'rutte':
+                text_rutte.append(line)
+            if save_text == 'de jonge':
+                text_de_jonge.append(line)
+
+            if line.isupper():    
+                if 'RUT' in line:
+                    save_text='rutte'
+                elif 'DE JONGE' in line:
+                    save_text='de jonge'
+
+                else:
+                    words.add(line)
+                    save_text=False
+
+        conference_date = conference['filename'][0:-4]
+
+        all_text_rutte.append( {'date': conference_date, 'text': text_rutte } )
+        all_text_de_jonge.append( { 'date': conference_date, 'text': text_de_jonge })
+        
+    return (all_text_rutte, all_text_de_jonge
