@@ -1,8 +1,11 @@
-from src.util.toespraken import download_toespraken
+from src.util.toespraken import download_conferences
 
 
 def download_input():
-    download_toespraken()
+    """
+    Downloads the required files for the project
+    """
+    download_conferences()
 
 
 if __name__ == "__main__":
