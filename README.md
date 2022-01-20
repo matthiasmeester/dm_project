@@ -1,1 +1,1 @@
-# dm_project
+# Data Mining UU final project
