@@ -1,6 +1,7 @@
 import os
 import pathlib
 from datetime import datetime
+from typing import Tuple
 
 import pandas as pd
 import requests
@@ -49,10 +50,11 @@ def download_conferences():
             txt_file.write('\n'.join(texts))
 
 
-def _preprocess_conference_data(conference_data: list):
+def _preprocess_conference_data(conference_data: list) -> Tuple:
     """
     Preprocesses the text of a single conference
-    Todo.
+
+    :return: a tuple containing Rutte texts and De Jonge texts respectively per press conference
     """
 
     # Starts with saving text for Rutte
@@ -79,9 +81,13 @@ def _preprocess_conference_data(conference_data: list):
     return text_rutte, text_de_jonge
 
 
-def _preprocess_all_conferences():
+def _preprocess_all_conferences() -> Tuple:
     """
-    Todo.
+
+    Returns the preprocessed conference data
+
+    :return: a tuple containing Rutte texts and De Jonge texts respectively
+
     """
     conference_paths = os.listdir(CONFERENCE_OUTPUT_FOLDER)
     all_text_rutte, all_text_de_jonge = [], []
@@ -96,9 +102,11 @@ def _preprocess_all_conferences():
     return all_text_rutte, all_text_de_jonge
 
 
-def get_conference_data():
+def get_conference_data() -> Tuple:
     """
-    Todo.
+    Returns the preprocessed conference data
+
+    :return: a tuple containing Rutte texts and De Jonge texts respectively
     """
     if not os.listdir(CONFERENCE_OUTPUT_FOLDER):
         download_conferences()
