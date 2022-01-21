@@ -77,11 +77,28 @@ def _preprocess_conference_data(conference_data: list) -> Tuple:
             else:
                 words.add(line)
                 save_text = 'other'
-
+    
     return text_rutte, text_de_jonge
 
 
-def _preprocess_all_conferences() -> Tuple:
+def _get_sentence_length(text_by_speaker: tuple) -> tuple:
+    """
+
+    Adds the number of sentences by speaker per conference
+
+    :return: a tuple containing Rutte texts and De Jonge texts respectively
+
+    """
+    for i, conferences_list in enumerate(text_by_speaker):
+        for j, conference in enumerate(conferences_list):
+            full_conference_text = ''.join(conference['text']).replace("\n", " ")
+            sentences = re.split(r'(?<![A-Z][a-z]\.)(?<=\.|\?)\s(?<!\w\.\w.\s)', full_conference_text)
+            text_by_speaker[i][j]['number_of_sentences'] = len(sentences)
+    
+    return text_by_speaker[0], text_by_speaker[1]
+    
+
+def _preprocess_all_conferences() -> tuple:
     """
 
     Returns the preprocessed conference data
@@ -99,10 +116,12 @@ def _preprocess_all_conferences() -> Tuple:
             all_text_rutte.append({'date': conf_date, 'text': text_rutte})
             all_text_de_jonge.append({'date': conf_date, 'text': text_de_jonge})
 
+    all_text_rutte, all_text_de_jonge = _get_sentence_length((all_text_rutte, all_text_de_jonge))
+    
     return all_text_rutte, all_text_de_jonge
 
 
-def get_conference_data() -> Tuple:
+def get_conference_data() -> tuple:
     """
     Returns the preprocessed conference data
 
