@@ -2,10 +2,14 @@ import os
 import pathlib
 from datetime import datetime
 from typing import Tuple
+from collections import Counter
+import math
 
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
+
+import re
 
 # Used for tfidf
 import spacy
@@ -83,11 +87,12 @@ def _preprocess_conference_data(conference_data: list) -> Tuple:
                 save_text = 'other'
     
     # get rid of newline characters
-    speakers_text = (text_rutte, text_de_jonge)
+    speakers_text = [text_rutte, text_de_jonge]
+
     for i, data in enumerate(speakers_text):
         speakers_text[i] = ''.join(data).replace("\n", " ")
     
-    return speakers_text
+    return tuple(speakers_text)
 
 
 def _get_sentence_length(text_by_speaker: tuple) -> tuple:
@@ -100,7 +105,7 @@ def _get_sentence_length(text_by_speaker: tuple) -> tuple:
     """
     for i, conferences_list in enumerate(text_by_speaker):
         for j, conference in enumerate(conferences_list):
-            sentences = re.split(r'(?<![A-Z][a-z]\.)(?<=\.|\?)\s(?<!\w\.\w.\s)', conference)
+            sentences = re.split(r'(?<![A-Z][a-z]\.)(?<=\.|\?)\s(?<!\w\.\w.\s)', conference['text'])
             text_by_speaker[i][j]['number_of_sentences'] = len(sentences)
     
     return text_by_speaker[0], text_by_speaker[1]
@@ -115,12 +120,12 @@ def _calculate_tfidf(text_by_speaker: tuple) -> tuple:
 
     """
     # works better than the Spacy sentence splitter
-    nr_of_docs = len(text_by_speaker[0]
+    nr_of_docs = len(text_by_speaker[0]) + len(text_by_speaker[1])
     
     # Get Word Counts                 
     for i, conferences_list in enumerate(text_by_speaker):
         for j, conference in enumerate(conferences_list):
-            words = [token.lemma_ for token in nlp(conference) if not (token.is_stop or token.is_punct or token.is_space)]
+            words = [token.lemma_ for token in nlp(conference['text']) if not (token.is_stop or token.is_punct or token.is_space)]
     
             word_count = Counter(words)
 
@@ -138,16 +143,24 @@ def _calculate_tfidf(text_by_speaker: tuple) -> tuple:
                      
             # length of word_list
             total_uniques = len(word_list)
-
+            
             # Get Word Frequency
             word_frequency = list()
             for word_tuple in word_list:
                 word, count = word_tuple
-                count = count / total_uniques * math.log(doc_number / docs_with)
+                
+                docs_with = 0
+                # Check number of other text docs that contain the word
+                for i, conferences_list in enumerate(text_by_speaker):
+                    for j, conference in enumerate(conferences_list):
+                        if word in dict(conference['word_list']):
+                            docs_with += 1
+                        
+                count = count / total_uniques * math.log(nr_of_docs / docs_with)
                 word_frequency.append((word, count))
             text_by_speaker[i][j]['word_frequency'] = word_frequency
                      
-     return text_by_speaker
+    return text_by_speaker
                      
 def _preprocess_all_conferences() -> tuple:
     """
@@ -167,9 +180,12 @@ def _preprocess_all_conferences() -> tuple:
             all_text_rutte.append({'date': conf_date, 'text': text_rutte})
             all_text_de_jonge.append({'date': conf_date, 'text': text_de_jonge})
 
-    all_text_rutte, all_text_de_jonge = _get_sentence_length((all_text_rutte, all_text_de_jonge))
+    ### Disabled for now, should be an option run option (e.g. add boolean as parameter to this function?)
+    if False:
+        all_text_rutte, all_text_de_jonge = _get_sentence_length((all_text_rutte, all_text_de_jonge))
     
-    all_text_rutte, all_text_de_jonge = _calculate_tfidf((all_text_rutte, all_text_de_jonge))
+    if False:
+        all_text_rutte, all_text_de_jonge = _calculate_tfidf((all_text_rutte, all_text_de_jonge))
     
     return all_text_rutte, all_text_de_jonge
 
@@ -182,4 +198,5 @@ def get_conference_data() -> tuple:
     """
     if not os.listdir(CONFERENCE_OUTPUT_FOLDER):
         download_conferences()
+
     return _preprocess_all_conferences()
