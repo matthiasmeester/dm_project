@@ -7,6 +7,10 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 
+# Used for tfidf
+import spacy
+nlp = spacy.load("nl_core_news_sm")
+
 PERSCONFERENTIES_API_URL = 'https://www.rijksoverheid.nl/onderwerpen/coronavirus-covid-19/coronavirus-beeld-en-video/videos-persconferenties'
 RIJKSOVERHEID_URL = 'https://www.rijksoverheid.nl'
 CONFERENCE_OUTPUT_FOLDER = '../input/conferences/'
@@ -78,7 +82,12 @@ def _preprocess_conference_data(conference_data: list) -> Tuple:
                 words.add(line)
                 save_text = 'other'
     
-    return text_rutte, text_de_jonge
+    # get rid of newline characters
+    speakers_text = (text_rutte, text_de_jonge)
+    for i, data in enumerate(speakers_text):
+        speakers_text[i] = ''.join(data).replace("\n", " ")
+    
+    return speakers_text
 
 
 def _get_sentence_length(text_by_speaker: tuple) -> tuple:
@@ -91,13 +100,55 @@ def _get_sentence_length(text_by_speaker: tuple) -> tuple:
     """
     for i, conferences_list in enumerate(text_by_speaker):
         for j, conference in enumerate(conferences_list):
-            full_conference_text = ''.join(conference['text']).replace("\n", " ")
-            sentences = re.split(r'(?<![A-Z][a-z]\.)(?<=\.|\?)\s(?<!\w\.\w.\s)', full_conference_text)
+            sentences = re.split(r'(?<![A-Z][a-z]\.)(?<=\.|\?)\s(?<!\w\.\w.\s)', conference)
             text_by_speaker[i][j]['number_of_sentences'] = len(sentences)
     
     return text_by_speaker[0], text_by_speaker[1]
     
 
+def _calculate_tfidf(text_by_speaker: tuple) -> tuple:
+    """
+
+    Calculates the tfidf per speaker per conference
+
+    :return: a tuple containing Rutte texts and De Jonge texts respectively
+
+    """
+    # works better than the Spacy sentence splitter
+    nr_of_docs = len(text_by_speaker[0]
+    
+    # Get Word Counts                 
+    for i, conferences_list in enumerate(text_by_speaker):
+        for j, conference in enumerate(conferences_list):
+            words = [token.lemma_ for token in nlp(conference) if not (token.is_stop or token.is_punct or token.is_space)]
+    
+            word_count = Counter(words)
+
+            # Sorted word count                 
+            word_list = list(word_count.items())
+            word_list.sort(key=lambda item: item[1], reverse=True)
+
+            text_by_speaker[i][j]['word_list'] = word_list
+                     
+    # Get Relative Word Frequencies                 
+    for i, conferences_list in enumerate(text_by_speaker):
+        for j, conference in enumerate(conferences_list):       
+            
+            word_list = text_by_speaker[i][j]['word_list']
+                     
+            # length of word_list
+            total_uniques = len(word_list)
+
+            # Get Word Frequency
+            word_frequency = list()
+            for word_tuple in word_list:
+                word, count = word_tuple
+                count = count / total_uniques * math.log(doc_number / docs_with)
+                word_frequency.append((word, count))
+            text_by_speaker[i][j]['word_frequency'] = word_frequency
+                     
+     return text_by_speaker
+                     
 def _preprocess_all_conferences() -> tuple:
     """
 
@@ -117,6 +168,8 @@ def _preprocess_all_conferences() -> tuple:
             all_text_de_jonge.append({'date': conf_date, 'text': text_de_jonge})
 
     all_text_rutte, all_text_de_jonge = _get_sentence_length((all_text_rutte, all_text_de_jonge))
+    
+    all_text_rutte, all_text_de_jonge = _calculate_tfidf((all_text_rutte, all_text_de_jonge))
     
     return all_text_rutte, all_text_de_jonge
 
