@@ -58,7 +58,7 @@ def download_conferences():
             txt_file.write('\n'.join(texts))
 
 
-def _preprocess_conference_data(conference_data: list) -> Tuple:
+def _preprocess_conference_data(conference_data: list) -> tuple:
     """
     Preprocesses the text of a single conference
 
