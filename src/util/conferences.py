@@ -6,10 +6,13 @@ from collections import Counter
 import math
 
 import pandas as pd
+import numpy as np
 import requests
 from bs4 import BeautifulSoup
 
 import re
+
+from tqdm.notebook import tqdm
 
 # Used for tfidf
 import spacy
@@ -119,50 +122,56 @@ def _calculate_tfidf(text_by_speaker: tuple) -> tuple:
     :return: a tuple containing Rutte texts and De Jonge texts respectively
 
     """
-    # works better than the Spacy sentence splitter
-    nr_of_docs = len(text_by_speaker[0]) + len(text_by_speaker[1])
+    corpus = pd.DataFrame(columns=['words'])
+    nr_of_conferences = len(text_by_speaker[0])
     
-    # Get Word Counts                 
-    for i, conferences_list in enumerate(text_by_speaker):
-        for j, conference in enumerate(conferences_list):
-            words = [token.lemma_ for token in nlp(conference['text']) if not (token.is_stop or token.is_punct or token.is_space)]
-    
-            word_count = Counter(words)
-
-            # Sorted word count                 
-            word_list = list(word_count.items())
-            word_list.sort(key=lambda item: item[1], reverse=True)
-
-            text_by_speaker[i][j]['word_list'] = word_list
-                     
-    # Get Relative Word Frequencies                 
-    for i, conferences_list in enumerate(text_by_speaker):
-        for j, conference in enumerate(conferences_list):       
-            
-            word_list = text_by_speaker[i][j]['word_list']
-                     
-            # length of word_list
-            total_uniques = len(word_list)
-            
-            # Get Word Frequency
-            word_frequency = list()
-            for word_tuple in word_list:
-                word, count = word_tuple
+    # Create Dataframe with Word Counts 
+    for i in tqdm(range(nr_of_conferences)):
+        full_conference_text = text_by_speaker[0][i]['text'] + text_by_speaker[1][i]['text']
+        words = [token.lemma_ for token in nlp(full_conference_text) if not (token.is_stop or token.is_punct or token.is_space)]
+        
+        word_count = Counter(words)
+   
+        new_words= list(set(word_count.keys())-set(corpus['words']))
+        corpus = corpus.append(pd.DataFrame({'words': new_words}), ignore_index=True)
+        
+        wordlist = []
+        for word in corpus['words']:
+            if word in word_count.keys():
+                wordlist.append(word_count[word])
+            else:
+                wordlist.append(0)
                 
-                docs_with = 0
-                # Check number of other text docs that contain the word
-                for i, conferences_list in enumerate(text_by_speaker):
-                    for j, conference in enumerate(conferences_list):
-                        if word in dict(conference['word_list']):
-                            docs_with += 1
-                        
-                count = count / total_uniques * math.log(nr_of_docs / docs_with)
-                word_frequency.append((word, count))
-            text_by_speaker[i][j]['word_frequency'] = word_frequency
+        corpus[text_by_speaker[0][i]['date']] = wordlist
+    
+    corpus.set_index('words', inplace=True)
+    corpus.fillna(0, inplace=True)
+    
+   
+    corpus.to_csv('corpus.csv')
+    
+    tf_idf = {k:[] for k in corpus.columns}
+    
+    # Create Dataframe with Relative Word Frequencies 
+    for index, row in tqdm(corpus.iterrows(), total=len(corpus)):
+        docs_with = np.count_nonzero(row)
+        
+        for colname, count in row.items():
+            total_uniques = np.count_nonzero(corpus[colname])
+            value = (count / total_uniques) * math.log(len(corpus.columns)/docs_with)
+            
+            tf_idf[colname].append(value)
+            
+    tf_idf_df = pd.DataFrame.from_dict(tf_idf)
+    tf_idf_df.set_index(corpus.index, inplace=True)
+    
+    
+    tf_idf_df.to_csv(('tf_idf.csv'))
+            
+    print("Saved results to 'corpus.csv' and 'tf_idf.csv'")
+    
                      
-    return text_by_speaker
-                     
-def _preprocess_all_conferences() -> tuple:
+def _preprocess_all_conferences(calculate_tfidf=False, calculate_sentence_length=False) -> tuple:
     """
 
     Returns the preprocessed conference data
@@ -181,11 +190,11 @@ def _preprocess_all_conferences() -> tuple:
             all_text_de_jonge.append({'date': conf_date, 'text': text_de_jonge})
 
     ### Disabled for now, should be an option run option (e.g. add boolean as parameter to this function?)
-    if False:
+    if calculate_sentence_length:
         all_text_rutte, all_text_de_jonge = _get_sentence_length((all_text_rutte, all_text_de_jonge))
     
-    if False:
-        all_text_rutte, all_text_de_jonge = _calculate_tfidf((all_text_rutte, all_text_de_jonge))
+    if calculate_tfidf:
+        _calculate_tfidf((all_text_rutte, all_text_de_jonge))
     
     return all_text_rutte, all_text_de_jonge
 
@@ -199,4 +208,4 @@ def get_conference_data() -> tuple:
     if not os.listdir(CONFERENCE_OUTPUT_FOLDER):
         download_conferences()
 
-    return _preprocess_all_conferences()
+    return _preprocess_all_conferences(calculate_tfidf=False)
