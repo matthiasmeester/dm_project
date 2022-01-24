@@ -2,7 +2,7 @@ import os
 
 import pandas as pd
 
-INFECTIONS_OUTPUT_FILE = '../input/infections/raw_infection_data.csv'
+INFECTIONS_OUTPUT_FILE = 'input/infections/raw_infection_data.csv'
 BESMETTINGEN_CSV_URL = 'https://data.rivm.nl/covid-19/COVID-19_aantallen_gemeente_cumulatief.csv'
 
 

@@ -56,7 +56,7 @@ def download_conferences():
             txt_file.write('\n'.join(texts))
 
 
-def _preprocess_conference_data(conference_data: list) -> tuple:
+def _preprocess_conference_data(conference_data: list, include_journalist_questions) -> tuple:
     """
     Preprocesses the text of a single conference
 
@@ -65,30 +65,33 @@ def _preprocess_conference_data(conference_data: list) -> tuple:
 
     # Starts with saving text for Rutte
     save_text = 'rutte'
-    words = set()
 
     # Only keep the sentences of Rutte and De Jonge
     text_rutte, text_de_jonge = [], []
+    text_other = []
     for line in conference_data:
-        if save_text == 'rutte':
-            text_rutte.append(line)
-        if save_text == 'de jonge':
-            text_de_jonge.append(line)
-
         if line.isupper():
             if 'RUT' in line:
                 save_text = 'rutte'
             elif 'DE JONGE' in line:
                 save_text = 'de jonge'
             else:
-                words.add(line)
                 save_text = 'other'
+        else:
+            if save_text == 'rutte':
+                text_rutte.append(line)
+            if save_text == 'de jonge':
+                text_de_jonge.append(line)
+            if save_text == 'other':
+                if not include_journalist_questions:
+                    break
+                text_other.append(line)
 
-    # get rid of newline characters
     speakers_text = [text_rutte, text_de_jonge]
 
+    # get rid of newline characters
     for i, data in enumerate(speakers_text):
-        speakers_text[i] = ''.join(data).replace("\n", " ")
+        speakers_text[i] = ''.join(data).replace("\n", " ").replace("\r", " ")
 
     return tuple(speakers_text)
 
@@ -109,7 +112,7 @@ def _get_sentence_length(text_by_speaker: tuple) -> tuple:
     return text_by_speaker[0], text_by_speaker[1]
 
 
-def _preprocess_all_conferences() -> tuple:
+def _preprocess_all_conferences(include_journalist_questions) -> tuple:
     """
 
     Returns the preprocessed conference data
@@ -122,7 +125,7 @@ def _preprocess_all_conferences() -> tuple:
 
     for conf_file_name in conference_paths:
         with open(f"{CONFERENCE_OUTPUT_FOLDER}/{conf_file_name}", "r", encoding='utf-8') as f:
-            text_rutte, text_de_jonge = _preprocess_conference_data(f.readlines())
+            text_rutte, text_de_jonge = _preprocess_conference_data(f.readlines(), include_journalist_questions)
             conf_date = conf_file_name.replace('.txt', '')
             all_text_rutte.append({'date': conf_date, 'text': text_rutte})
             all_text_de_jonge.append({'date': conf_date, 'text': text_de_jonge})
@@ -130,7 +133,7 @@ def _preprocess_all_conferences() -> tuple:
     return all_text_rutte, all_text_de_jonge
 
 
-def get_conference_data() -> tuple:
+def get_conference_data(include_journalist_questions=False) -> tuple:
     """
     Returns the preprocessed conference data
 
@@ -139,4 +142,4 @@ def get_conference_data() -> tuple:
     if not os.listdir(CONFERENCE_OUTPUT_FOLDER):
         download_conferences()
 
-    return _preprocess_all_conferences()
+    return _preprocess_all_conferences(include_journalist_questions)
