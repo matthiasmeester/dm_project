@@ -1,22 +1,11 @@
 import os
 import pathlib
+import re
 from datetime import datetime
-from typing import Tuple
-from collections import Counter
-import math
 
 import pandas as pd
-import numpy as np
 import requests
 from bs4 import BeautifulSoup
-
-import re
-
-from tqdm.notebook import tqdm
-
-# Used for tfidf
-import spacy
-nlp = spacy.load("nl_core_news_sm")
 
 PERSCONFERENTIES_API_URL = 'https://www.rijksoverheid.nl/onderwerpen/coronavirus-covid-19/coronavirus-beeld-en-video/videos-persconferenties'
 RIJKSOVERHEID_URL = 'https://www.rijksoverheid.nl'
@@ -88,13 +77,13 @@ def _preprocess_conference_data(conference_data: list) -> tuple:
             else:
                 words.add(line)
                 save_text = 'other'
-    
+
     # get rid of newline characters
     speakers_text = [text_rutte, text_de_jonge]
 
     for i, data in enumerate(speakers_text):
         speakers_text[i] = ''.join(data).replace("\n", " ")
-    
+
     return tuple(speakers_text)
 
 
@@ -110,67 +99,10 @@ def _get_sentence_length(text_by_speaker: tuple) -> tuple:
         for j, conference in enumerate(conferences_list):
             sentences = re.split(r'(?<![A-Z][a-z]\.)(?<=\.|\?)\s(?<!\w\.\w.\s)', conference['text'])
             text_by_speaker[i][j]['number_of_sentences'] = len(sentences)
-    
+
     return text_by_speaker[0], text_by_speaker[1]
-    
 
-def _calculate_tfidf(text_by_speaker: tuple) -> tuple:
-    """
 
-    Calculates the tfidf per speaker per conference
-
-    :return: a tuple containing Rutte texts and De Jonge texts respectively
-
-    """
-    corpus = pd.DataFrame(columns=['words'])
-    nr_of_conferences = len(text_by_speaker[0])
-    
-    # Create Dataframe with Word Counts 
-    for i in tqdm(range(nr_of_conferences)):
-        full_conference_text = text_by_speaker[0][i]['text'] + text_by_speaker[1][i]['text']
-        words = [token.lemma_ for token in nlp(full_conference_text) if not (token.is_stop or token.is_punct or token.is_space)]
-        
-        word_count = Counter(words)
-   
-        new_words= list(set(word_count.keys())-set(corpus['words']))
-        corpus = corpus.append(pd.DataFrame({'words': new_words}), ignore_index=True)
-        
-        wordlist = []
-        for word in corpus['words']:
-            if word in word_count.keys():
-                wordlist.append(word_count[word])
-            else:
-                wordlist.append(0)
-                
-        corpus[text_by_speaker[0][i]['date']] = wordlist
-    
-    corpus.set_index('words', inplace=True)
-    corpus.fillna(0, inplace=True)
-    
-   
-    corpus.to_csv('corpus.csv')
-    
-    tf_idf = {k:[] for k in corpus.columns}
-    
-    # Create Dataframe with Relative Word Frequencies 
-    for index, row in tqdm(corpus.iterrows(), total=len(corpus)):
-        docs_with = np.count_nonzero(row)
-        
-        for colname, count in row.items():
-            total_uniques = np.count_nonzero(corpus[colname])
-            value = (count / total_uniques) * math.log(len(corpus.columns)/docs_with)
-            
-            tf_idf[colname].append(value)
-            
-    tf_idf_df = pd.DataFrame.from_dict(tf_idf)
-    tf_idf_df.set_index(corpus.index, inplace=True)
-    
-    
-    tf_idf_df.to_csv(('tf_idf.csv'))
-            
-    print("Saved results to 'corpus.csv' and 'tf_idf.csv'")
-    
-                     
 def _preprocess_all_conferences(calculate_tfidf=False, calculate_sentence_length=False) -> tuple:
     """
 
@@ -192,10 +124,10 @@ def _preprocess_all_conferences(calculate_tfidf=False, calculate_sentence_length
     ### Disabled for now, should be an option run option (e.g. add boolean as parameter to this function?)
     if calculate_sentence_length:
         all_text_rutte, all_text_de_jonge = _get_sentence_length((all_text_rutte, all_text_de_jonge))
-    
+
     if calculate_tfidf:
         _calculate_tfidf((all_text_rutte, all_text_de_jonge))
-    
+
     return all_text_rutte, all_text_de_jonge
 
 
