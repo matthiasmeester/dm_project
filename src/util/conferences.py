@@ -9,7 +9,13 @@ from bs4 import BeautifulSoup
 
 PERSCONFERENTIES_API_URL = 'https://www.rijksoverheid.nl/onderwerpen/coronavirus-covid-19/coronavirus-beeld-en-video/videos-persconferenties'
 RIJKSOVERHEID_URL = 'https://www.rijksoverheid.nl'
-CONFERENCE_OUTPUT_FOLDER = '../input/conferences/'
+CONFERENCE_OUTPUT_FOLDER = 'input/conferences/'
+
+
+def correct_cwd():
+    cwd = os.getcwd()
+    if not cwd.endswith('src'):
+        os.chdir('..')
 
 
 def get_date(date_row: str) -> str:
@@ -103,7 +109,7 @@ def _get_sentence_length(text_by_speaker: tuple) -> tuple:
     return text_by_speaker[0], text_by_speaker[1]
 
 
-def _preprocess_all_conferences(calculate_tfidf=False, calculate_sentence_length=False) -> tuple:
+def _preprocess_all_conferences() -> tuple:
     """
 
     Returns the preprocessed conference data
@@ -121,13 +127,6 @@ def _preprocess_all_conferences(calculate_tfidf=False, calculate_sentence_length
             all_text_rutte.append({'date': conf_date, 'text': text_rutte})
             all_text_de_jonge.append({'date': conf_date, 'text': text_de_jonge})
 
-    ### Disabled for now, should be an option run option (e.g. add boolean as parameter to this function?)
-    if calculate_sentence_length:
-        all_text_rutte, all_text_de_jonge = _get_sentence_length((all_text_rutte, all_text_de_jonge))
-
-    if calculate_tfidf:
-        _calculate_tfidf((all_text_rutte, all_text_de_jonge))
-
     return all_text_rutte, all_text_de_jonge
 
 
@@ -140,4 +139,4 @@ def get_conference_data() -> tuple:
     if not os.listdir(CONFERENCE_OUTPUT_FOLDER):
         download_conferences()
 
-    return _preprocess_all_conferences(calculate_tfidf=False)
+    return _preprocess_all_conferences()
