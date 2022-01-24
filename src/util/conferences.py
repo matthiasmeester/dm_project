@@ -30,6 +30,17 @@ def get_date(date_row: str) -> str:
     return datetime_object.strftime("%Y-%m-%d")
 
 
+def download_single_conference(url):
+    response_text = requests.get(url)
+    soup = BeautifulSoup(response_text.content, "html.parser")
+    raw_paragraphs = soup.find_all('p')
+    date_row = raw_paragraphs[0].get_text()
+    texts = [p.get_text() for p in raw_paragraphs[2:]]
+    file_name = f"{CONFERENCE_OUTPUT_FOLDER}/{get_date(date_row)}.txt"
+    with open(file_name, "w", encoding='utf-8') as txt_file:
+        txt_file.write('\n'.join(texts))
+
+
 def download_conferences():
     """
     Downloads all the available press conferences and stores them into the output folder
@@ -45,15 +56,15 @@ def download_conferences():
     urls = RIJKSOVERHEID_URL + urls
 
     pathlib.Path(CONFERENCE_OUTPUT_FOLDER).mkdir(parents=True, exist_ok=True)
-    for i, url in enumerate(urls):
-        response_text = requests.get(url)
-        soup = BeautifulSoup(response_text.content, "html.parser")
-        raw_paragraphs = soup.find_all('p')
-        date_row = raw_paragraphs[0].get_text()
-        texts = [p.get_text() for p in raw_paragraphs[2:]]
-        file_name = f"{CONFERENCE_OUTPUT_FOLDER}/{get_date(date_row)}.txt"
-        with open(file_name, "w", encoding='utf-8') as txt_file:
-            txt_file.write('\n'.join(texts))
+
+    for url in urls:
+        download_single_conference(url)
+
+    with open('input/extra_conferences.txt') as f:
+        extra_urls = f.read().splitlines()
+
+    for url in extra_urls:
+        download_single_conference(url)
 
 
 def _preprocess_conference_data(conference_data: list, include_journalist_questions) -> tuple:
