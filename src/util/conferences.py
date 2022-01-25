@@ -10,6 +10,7 @@ from bs4 import BeautifulSoup
 PERSCONFERENTIES_API_URL = 'https://www.rijksoverheid.nl/onderwerpen/coronavirus-covid-19/coronavirus-beeld-en-video/videos-persconferenties'
 RIJKSOVERHEID_URL = 'https://www.rijksoverheid.nl'
 CONFERENCE_OUTPUT_FOLDER = 'input/conferences/'
+FORBIDDEN_LINES = ['Let op. De datum van deze tekst']
 
 
 def correct_cwd():
@@ -81,6 +82,8 @@ def _preprocess_conference_data(conference_data: list, include_journalist_questi
     text_rutte, text_de_jonge = [], []
     text_other = []
     for line in conference_data:
+        if any([forbidden in line for forbidden in FORBIDDEN_LINES]):
+            continue
         if line.isupper():
             if 'RUT' in line:
                 save_text = 'rutte'
