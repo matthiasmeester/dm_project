@@ -114,7 +114,7 @@ def get_sentences(conference_text: list):
     str_text = ''.join(conference_text).replace("\n", " ")
     sentences = re.split(r'(?<![A-Z][a-z]\.)(?<=\.|\?)\s(?<!\w\.\w.\s)', str_text)
     for sentence in sentences.copy():
-        if len(sentence) < 5:
+        if not sentence or sentence.isspace() or len(sentence) <= 2:
             sentences.remove(sentence)
     return sentences
 
