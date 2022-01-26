@@ -125,7 +125,21 @@ def get_sentences(conference_text: list):
     return sentences
 
 
-def _get_number_of_sentences(text_by_speaker: tuple) -> tuple:
+def get_average_sentence_length(conference_text: list):
+    sentences = get_sentences(conference_text)
+    total_word_count = get_number_of_words(conference_text)
+    return total_word_count / len(sentences)
+
+
+def get_number_of_words(conference_text: list):
+    sentences = get_sentences(conference_text)
+    total_word_count = 0
+    for sentence in sentences:
+        total_word_count += len(sentence.split(' '))
+    return total_word_count
+
+
+def get_number_of_sentences_in_conference(text_by_speaker: tuple) -> tuple:
     """
 
     Adds the number of sentences by speaker per conference
