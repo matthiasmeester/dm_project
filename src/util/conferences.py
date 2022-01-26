@@ -81,6 +81,12 @@ def _preprocess_conference_data(conference_data: list, include_journalist_questi
     # Only keep the sentences of Rutte and De Jonge
     text_rutte, text_de_jonge = [], []
     text_other = []
+
+    # Is rutte conference
+    rutte_conference = any(['rutte' in line.lower() for line in conference_data])
+    if not rutte_conference:
+        return text_rutte, text_de_jonge
+
     for line in conference_data:
         if any([forbidden in line for forbidden in FORBIDDEN_LINES]):
             continue
@@ -149,8 +155,11 @@ def _preprocess_all_conferences(include_journalist_questions) -> tuple:
         with open(f"{CONFERENCE_OUTPUT_FOLDER}/{conf_file_name}", "r", encoding='utf-8') as f:
             text_rutte, text_de_jonge = _preprocess_conference_data(f.readlines(), include_journalist_questions)
             conf_date = conf_file_name.replace('.txt', '')
-            all_text_rutte.append({'date': conf_date, 'text': text_rutte})
-            all_text_de_jonge.append({'date': conf_date, 'text': text_de_jonge})
+            if text_rutte:
+                all_text_rutte.append({'date': conf_date, 'text': text_rutte})
+                all_text_de_jonge.append({'date': conf_date, 'text': text_de_jonge})
+            else:
+                print(f"Print {conf_file_name} is not a rutte press conference")
 
     return all_text_rutte, all_text_de_jonge
 
