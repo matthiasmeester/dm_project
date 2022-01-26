@@ -81,6 +81,12 @@ def _preprocess_conference_data(conference_data: list, include_journalist_questi
     # Only keep the sentences of Rutte and De Jonge
     text_rutte, text_de_jonge = [], []
     text_other = []
+
+    # Is rutte conference
+    rutte_conference = any(['rutte' in line.lower() for line in conference_data])
+    if not rutte_conference:
+        return text_rutte, text_de_jonge
+
     for line in conference_data:
         if any([forbidden in line for forbidden in FORBIDDEN_LINES]):
             continue
@@ -119,7 +125,21 @@ def get_sentences(conference_text: list):
     return sentences
 
 
-def _get_sentence_length(text_by_speaker: tuple) -> tuple:
+def get_average_sentence_length(conference_text: list):
+    sentences = get_sentences(conference_text)
+    total_word_count = get_number_of_words(conference_text)
+    return total_word_count / len(sentences)
+
+
+def get_number_of_words(conference_text: list):
+    sentences = get_sentences(conference_text)
+    total_word_count = 0
+    for sentence in sentences:
+        total_word_count += len(sentence.split(' '))
+    return total_word_count
+
+
+def get_number_of_sentences_in_conference(text_by_speaker: tuple) -> tuple:
     """
 
     Adds the number of sentences by speaker per conference
@@ -149,8 +169,11 @@ def _preprocess_all_conferences(include_journalist_questions) -> tuple:
         with open(f"{CONFERENCE_OUTPUT_FOLDER}/{conf_file_name}", "r", encoding='utf-8') as f:
             text_rutte, text_de_jonge = _preprocess_conference_data(f.readlines(), include_journalist_questions)
             conf_date = conf_file_name.replace('.txt', '')
-            all_text_rutte.append({'date': conf_date, 'text': text_rutte})
-            all_text_de_jonge.append({'date': conf_date, 'text': text_de_jonge})
+            if text_rutte:
+                all_text_rutte.append({'date': conf_date, 'text': text_rutte})
+                all_text_de_jonge.append({'date': conf_date, 'text': text_de_jonge})
+            else:
+                print(f"Print {conf_file_name} is not a rutte press conference")
 
     return all_text_rutte, all_text_de_jonge
 
