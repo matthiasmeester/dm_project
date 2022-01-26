@@ -13,7 +13,7 @@ def download_infections() -> pd.DataFrame:
     :return: dataframe with the raw infection data
     """
     content = pd.read_csv(BESMETTINGEN_CSV_URL, error_bad_lines=False, sep=';')
-    content.to_csv(INFECTIONS_OUTPUT_FILE)
+    content.to_csv(INFECTIONS_OUTPUT_FILE, sep=';')
     return content
 
 

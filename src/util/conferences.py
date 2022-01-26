@@ -110,6 +110,15 @@ def _preprocess_conference_data(conference_data: list, include_journalist_questi
     return tuple(speakers_text)
 
 
+def get_sentences(conference_text: list):
+    str_text = ''.join(conference_text).replace("\n", " ")
+    sentences = re.split(r'(?<![A-Z][a-z]\.)(?<=\.|\?)\s(?<!\w\.\w.\s)', str_text)
+    for sentence in sentences.copy():
+        if len(sentence) < 5:
+            sentences.remove(sentence)
+    return sentences
+
+
 def _get_sentence_length(text_by_speaker: tuple) -> tuple:
     """
 
@@ -120,8 +129,7 @@ def _get_sentence_length(text_by_speaker: tuple) -> tuple:
     """
     for i, conferences_list in enumerate(text_by_speaker):
         for j, conference in enumerate(conferences_list):
-            sentences = re.split(r'(?<![A-Z][a-z]\.)(?<=\.|\?)\s(?<!\w\.\w.\s)', conference['text'])
-            text_by_speaker[i][j]['number_of_sentences'] = len(sentences)
+            text_by_speaker[i][j]['number_of_sentences'] = len(get_sentences(conference['text']))
 
     return text_by_speaker[0], text_by_speaker[1]
 
