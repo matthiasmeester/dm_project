@@ -83,7 +83,42 @@ def download_articles(dates, max_articles=10000, articles_dir='../input/articles
             break
 
 
-def count_articles(articles_dir):
+def count_articles(articles_dir='../input/articles'):
     nr_of_articles = sum(len(files) for _, _, files in os.walk(articles_dir))
     print(f'There are {nr_of_articles} articles!')
     return nr_of_articles
+
+
+def load_articles(articles_path) -> list:
+    text_list = []
+    for article in os.listdir(articles_path):
+        full_path = f"{articles_path}/{article}"
+
+        if os.path.exists(full_path):
+            with open(full_path, "r", encoding="utf-8") as f:
+                text_list.append(f.readlines())
+
+    return text_list
+
+
+def load_nos_texts(dates=[]) -> dict:
+    """
+    Used for loading text files content into a dictionary
+    """
+    base_path = "../input/articles/"
+    text_dict = {}
+
+    if not dates:
+        dates = os.listdir(base_path)
+        for date in tqdm(dates, total=len(dates)):
+            text_dict[date] = load_articles(articles_path=f"{base_path}{date}")
+    else:
+        for date in tqdm(dates, total=len(dates)):
+            if date in os.listdir(base_path):
+                text_dict[date] = load_articles(articles_path=f"{base_path}{date}")
+
+    return text_dict
+
+
+# load_nos_texts(dates=list_of_dates)
+# # print(x)
