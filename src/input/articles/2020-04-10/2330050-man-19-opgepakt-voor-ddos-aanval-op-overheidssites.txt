@@ -1,0 +1,5 @@
+In Breda heeft de politie een man opgepakt die ervan wordt verdacht op 19 maart de websites MijnOverheid.nl en Overheid.nl met een DDoS-aanval te hebben platgelegd.
+Bij een DDoS-aanval worden de servers van een website bestookt met grote hoeveelheden dataverkeer waardoor de site voor bezoekers niet meer bereikbaar is.
+"Door een website als deze plat te leggen, ontneem je burgers toegang tot hun persoonlijke gegevens en belangrijke overheidsinformatie", zegt Jeroen Niessen, hoofd van het cybercrimeteam van de politie Midden-Nederland. "Zeker nu de coronacrisis bij veel mensen voor extra onzekerheid en een grote informatiebehoefte zorgt, nemen we dit hoog op."
+Volgens het cybercrimeteam zijn het vaak jongeren die een DDoS-aanval plegen, uit verveling, voor de kick of als uitdaging om te zien of het hun lukt om een site plat te leggen. Ze realiseren zich vaak niet dat hun een grote schadeclaim boven het hoofd hangt als ze door de politie gevonden worden.
+De aangehouden man is een Bredanaar van 19. Hij wordt aangeklaagd voor het in gevaar brengen van vitale berichtgeving waardoor de veiligheid wordt belemmerd.
