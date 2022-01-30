@@ -60,13 +60,30 @@ def download_article_text(article_url, date):
             print(f'Could not save: {file_name}')
 
 
-def download_articles(dates):
+def download_articles(dates, max_articles=10000, articles_dir='../input/articles', refresh_articles=False):
     """
     Main function that collects article urls and downloads the article content
     """
-    article_urls_dict = get_article_urls(dates=dates)
-    for date in tqdm(article_urls_dict, total=len(article_urls_dict)):
-        pathlib.Path(ARTICLE_OUTPUT_FOLDER + '/' + date).mkdir(parents=True, exist_ok=True)
-        for article_url in tqdm(article_urls_dict[date], total=len(article_urls_dict[date])):
-            download_article_text(article_url=article_url, date=date)
+    article_files = os.listdir(articles_dir)
+    if not refresh_articles:
+        dates = [date for date in dates if date not in article_files]
 
+    if count_articles(articles_dir) < max_articles:
+        article_urls_dict = get_article_urls(dates=dates)
+        downloaded_articles = 0
+        for date in tqdm(article_urls_dict, total=len(article_urls_dict)):
+            pathlib.Path(ARTICLE_OUTPUT_FOLDER + '/' + date).mkdir(parents=True, exist_ok=True)
+            for article_url in tqdm(article_urls_dict[date], total=len(article_urls_dict[date])):
+                if downloaded_articles >= max_articles:
+                    break
+                download_article_text(article_url=article_url, date=date)
+                downloaded_articles += 1
+            else:
+                continue
+            break
+
+
+def count_articles(articles_dir):
+    nr_of_articles = sum(len(files) for _, _, files in os.walk(articles_dir))
+    print(f'There are {nr_of_articles} articles!')
+    return nr_of_articles
