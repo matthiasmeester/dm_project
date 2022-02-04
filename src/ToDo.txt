@@ -1,0 +1,25 @@
+- Topic Modeling
+- Spacy Language Model for Imperatives
+- Language Statistics:
+    - corpus
+    - tf
+    - tf-idf
+    - sentence length
+    - 
+- Compare language use to general language use:
+    - What percentage of words can be found in the 10.000(?) basic Dutch words?; or
+    - How does language use compare to Rutte in the past; or
+    - How does language usage compare to NOS language usage
+    
+- Comparison to NOS
+
+output:
+- Topic Modeling Graphs
+- Word Count Graph
+- Use of Imperatives Graphs
+- Comparison NOS: (only take articles that have keywords like 'corona, covid-19, quarantaine, etc. in them')
+    - Basic Words
+    - Sentence Length
+
+Died:
+    - NOS
