@@ -1,0 +1,5 @@
+Ruim een jaar nadat Google een functie uitbracht waarbij gebruikers de optie kregen om data automatisch te laten verwijderen, wordt deze optie vandaag uitgebreid.
+De internetgigant zal bij mensen die voor het eerst web-, -app- en locatiegeschiedenis aanzetten, automatisch activeren dat deze gegevens na achttien maanden verdwijnen. Het kan daarbij gaan om mensen die een nieuw account aanmaken of die de functie voor het eerst aanzetten; deze staat standaard uit.
+"We geloven dat onze producten jouw data moeten bewaren voor zolang het nuttig en handig voor jou is", zegt topman Sundar Pichai in een toelichting.
+Voor wie de geschiedenis al aan heeft staan of eerder aan- en daarna uit heeft gezet, verandert er niks. Deze gebruikers worden wel via notificaties en e-mails gewezen op de mogelijkheid.
+Google verzamelt via zijn talloze diensten veel data van gebruikers. Deze informatie wordt onder meer gebruikt voor het personaliseren van advertenties. Wel biedt de zoekgigant opties om zelf aan te geven welke data het bedrijf wel en niet verzamelt en of je inderdaad gepersonaliseerde advertenties krijgt aangeboden.

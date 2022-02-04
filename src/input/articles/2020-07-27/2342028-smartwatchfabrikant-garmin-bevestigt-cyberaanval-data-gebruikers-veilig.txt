@@ -1,0 +1,5 @@
+Smartwatchfabrikant Garmin bevestigt te zijn getroffen door een cyberaanval, nadat de diensten van de navigatiespecialist dagenlang niet waren te gebruiken. Volgens het Zwitsers-Amerikaanse techbedrijf zijn er geen gegevens van gebruikers gestolen of verloren gegaan.
+De maker van gps-apparaten, smartwatches en andere zogeheten wearables kampt sinds donderdag met problemen. Apparaten die verbinding maken met servers van het bedrijf, zoals smartwatches, functioneerden niet goed. Ook was de helpdesk slecht te bereiken.
+Het bedrijf hoopt de problemen binnen een paar dagen te hebben opgelost, staat in een persbericht. Eerder bood het bedrijf excuses aan voor het ongemak aan gebruikers aan op Twitter.
+Het bedrijf kon vrijdag nog niet bevestigen dat het om een ransomware-aanval gaat, waarbij vaak geld moet worden betaald aan de aanvallers. Garmin maakte in het persbericht niet bekend of er geld is betaald.
+Garmin verwacht dat de storing geen impact heeft op de financiële resultaten van het bedrijf.

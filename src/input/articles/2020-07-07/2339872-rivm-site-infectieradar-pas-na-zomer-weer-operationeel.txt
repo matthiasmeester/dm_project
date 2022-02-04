@@ -1,0 +1,8 @@
+De site Infectieradar, waarmee het RIVM nieuwe uitbraken van het coronavirus in kaart wilde brengen, blijft voorlopig uit de lucht. Het RIVM verwacht de site op zijn vroegst in september weer operationeel te hebben.
+Een maand geleden meldde de NOS dat Infectieradar een beveiligingslek bevatte, waardoor de ingevulde formulieren van andere gebruikers konden worden ingezien. Het RIVM haalde de site toen in allerijl offline.
+Deelnemers aan Infectieradar gaven één keer per week aan of ze coronaklachten hadden. Bij aanmelding gaven ze bovendien informatie over hun persoonlijke en medische situatie.
+Eerder maakte RIVM-baas Jaap van Dissel nog veel reclame voor de website. Hoe meer mensen zich zouden aanmelden, hoe beter, zei hij begin vorige maand in de Tweede Kamer.
+Dat het onderzoek nu helemaal stilligt is echter geen probleem, denkt het RIVM. Volgens het instituut zijn er genoeg instrumenten om nieuwe besmettingen in kaart te brengen. Gehoopt wordt wel dat de site in september weer in de lucht is, als de verkoudheidsvirussen de kop weer opsteken.
+Destijds deden zo'n 60.000 Nederlanders mee aan Infectieradar. Er zijn geen aanwijzingen dat hun persoonlijke gegevens door kwaadwillenden zijn ingezien, stelt het RIVM.
+Het RIVM werkt voor Infectieradar niet meer samen met het softwarebedrijf dat de vragenlijsten leverde, het Wassenaarse bedrijf Formdesk. "Sowieso ging het daarbij om een tijdelijke samenwerking", zegt een woordvoerder van het RIVM. De website wordt nu van de grond af aan opnieuw opgebouwd.
+Formdesk en het RIVM spraken elkaar in het openbaar tegen over de oorzaak van het probleem. Volgens het RIVM en minister De Jonge was dat al bekend, maar loste Formdesk het om onduidelijke redenen niet op. Formdesk spreekt dat tegen.

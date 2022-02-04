@@ -1,6 +1,7 @@
 import pathlib
 import requests
 import os
+import sys
 
 import pandas as pd
 from tqdm.notebook import tqdm
@@ -8,7 +9,7 @@ from bs4 import BeautifulSoup
 
 ARTICLE_OUTPUT_FOLDER = '../input/articles'
 NOS_ARCHIVE_URL = 'https://nos.nl/nieuws/archief/'
-NOS_URL = 'https: //nos.nl'
+NOS_URL = 'https://nos.nl'
 startdate = '2020-04-01'
 enddate = '2020-04-30' # datetime.today()
 
@@ -27,7 +28,7 @@ def get_article_urls(dates):
     """
     article_urls_dict = {}
 
-    for date in tqdm(dates, total=len(dates)):
+    for date in tqdm(dates, total=len(dates), desc="Fetching article urls..."):
         urls = []
         response = requests.get(NOS_ARCHIVE_URL+date)
         soup = BeautifulSoup(response.content, "html.parser")
@@ -56,8 +57,10 @@ def download_article_text(article_url, date):
         try:
             with open(file_name, "w", encoding="utf-8") as txt_file:
                 txt_file.write('\n'.join(texts))
+            return True
         except:
             print(f'Could not save: {file_name}')
+            return False
 
 
 def download_articles(dates, max_articles=10000, articles_dir='../input/articles', refresh_articles=False):
@@ -68,19 +71,23 @@ def download_articles(dates, max_articles=10000, articles_dir='../input/articles
     if not refresh_articles:
         dates = [date for date in dates if date not in article_files]
 
-    if count_articles(articles_dir) < max_articles:
+    downloaded_articles = count_articles(articles_dir)
+
+    if downloaded_articles < max_articles:
         article_urls_dict = get_article_urls(dates=dates)
-        downloaded_articles = 0
-        for date in tqdm(article_urls_dict, total=len(article_urls_dict)):
+        for date in tqdm(article_urls_dict, total=len(article_urls_dict), desc="Downloading article by day.. "):
             pathlib.Path(ARTICLE_OUTPUT_FOLDER + '/' + date).mkdir(parents=True, exist_ok=True)
-            for article_url in tqdm(article_urls_dict[date], total=len(article_urls_dict[date])):
+            for article_url in tqdm(article_urls_dict[date], total=len(article_urls_dict[date]), desc=f"Articles ({date}).. "):
                 if downloaded_articles >= max_articles:
                     break
-                download_article_text(article_url=article_url, date=date)
-                downloaded_articles += 1
+                correctly_downloaded = download_article_text(article_url=article_url, date=date)
+                if correctly_downloaded:
+                    downloaded_articles += 1
             else:
                 continue
+            print(f'Downloaded {max_articles} articles.')
             break
+
 
 
 def count_articles(articles_dir='../input/articles'):
@@ -119,6 +126,9 @@ def load_nos_texts(dates=[]) -> dict:
 
     return text_dict
 
-
+#l_of_dates = [x.strftime('%Y-%m-%d') for x in pd.date_range(start='2020-04-01', end='2020-04-30', freq='D')]
+#a = get_article_urls(l_of_dates)
+#print(a)
+#download_articles(l_of_dates, max_articles=42, refresh_articles=False)
 # load_nos_texts(dates=list_of_dates)
 # # print(x)

@@ -1,0 +1,4 @@
+De politie in Amsterdam heeft op verzoek van justitie in België een Nederlandse student opgepakt. De 22-jarige man zou meer dan 1 miljoen gebruikersaccounts bij twee Belgische telecomaanbieders en Nederlandse bedrijven hebben gehackt. Hij viel door de mand bij een onderzoek van de federale politie in het Belgische Hasselt.
+De man werd op heterdaad betrapt. Hij beschikte over een database waarop 2,5 miljoen Belgische en 4,5 miljoen Nederlandse mailadressen stonden, inclusief de bijbehorende wachtwoorden. Bij zijn arrestatie waren Belgische rechercheurs aanwezig.
+"De verdachte verdiende jaren grote sommen geld door de e-mailadressen via verder hacken aan te vullen met persoonlijke data van de gebruikers, zoals telefoon- en bankrekeningnummers", zegt het Belgische OM.
+De data zouden aan cybercriminelen zijn verkocht. Die konden daarmee gerichte phishingcampagnes opzetten en afpers-acties met ransomware.

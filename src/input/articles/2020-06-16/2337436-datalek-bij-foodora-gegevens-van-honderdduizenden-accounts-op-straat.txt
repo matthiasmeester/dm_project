@@ -1,0 +1,8 @@
+Door een datalek bij maaltijdbezorgdienst Foodora zijn de gegevens van honderdduizenden klanten buitgemaakt. Onder de 727.000 slachtoffers zijn ongeveer 50.000 Nederlanders.
+Dat bevestigt hacker Rickey Gevers, die het databestand heeft ingezien. Bij de hack zijn namen, adressen, telefoonnummers, bestelgeschiedenis en soms ook wachtwoorden naar buiten gekomen. Ook de opmerkingen bij bestellingen van klanten zijn in te zien.
+Foodora was tot 2018 in Nederland actief, maar werd daarna opgeheven. De gegevens zijn uit de periode juni 2015 tot en met april 2016, maar zijn pas op 19 mei dit jaar naar buiten gebracht. "Iedereen die een beetje weet waar je dit kan vinden, kan dit downloaden", zegt Gevers tegen de NOS.
+Volgens de hacker zijn er ook versleutelde wachtwoorden naar buiten gekomen. Daarbij gaat het bij 358.000 gevallen, waaronder 22.000 Nederlandse accounts. "Dat is heel lastig om te kraken, maar het lukte ons, als professionals. Dat betekent dat er een e-mailadres is gelekt inclusief wachtwoord."
+Een gehasht wachtwoord is een manier om een wachtwoord op te slaan waarbij het de bedoeling is dat je er het originele wachtwoord niet uit op kan maken, legt Gevers uit. "Echter kan je bij de meeste manieren alsnog het wachtwoord achterhalen."
+Volgens Gevers is het datalek niet uniek. "Het is alleen anders dat normaal het bedrijf de slachtoffers op de hoogte brengt van het datalek, maar nu het bedrijf hier niet meer bestaat." Het is daarom onwaarschijnlijk dat de slachtoffers op de hoogte zijn gebracht van het lek.
+In Nederland stopte Foodora in 2018, vanwege de hevige concurrentie. Ook was er geen andere partij die het bedrijf wilde overnemen.
+Het bedrijf achter Foodora, Delivery Hero, doet onderzoek naar het lek.
