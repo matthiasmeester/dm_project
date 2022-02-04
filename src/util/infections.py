@@ -69,6 +69,3 @@ def get_infection_data() -> pd.DataFrame:
     else:
         raw_infection_data, raw_ic_data = download_infections()
     return _preprocess_infection_data(raw_infection_data, raw_ic_data)
-
-
-print(get_infection_data())
