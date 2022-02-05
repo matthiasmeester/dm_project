@@ -1,0 +1,10 @@
+Tot afgelopen vrijdag heeft er een lek gezeten in de app die de inwoners van Qatar moeten gebruiken om de verspreiding van het coronavirus tegen te gaan. Dat meldt Amnesty International op basis van eigen onderzoek.
+In de app is het mogelijk om via het invoeren van een Qatarees BSN-nummer een QR-code op te vragen. Die bevat persoonlijke medische informatie. Het onderzoekslab van Amnesty ontdekte dat het, zonder extra authenticatie, mogelijk was om willekeurige persoonsnummers in te voeren - die werken met een vaststaand format - en zo privédata op te vragen.
+Hierdoor hadden onderzoekers toegang tot namen van personen, konden ze zien of iemand besmet was, en hadden ze inzage in de plek waar ze in isolatie zitten en het ziekenhuis waar ze worden behandeld.
+Waarschuwing voor overheden
+De Nederlandse app werkt anders dan die van Qatar, maar volgens Amnesty moet dit incident dienen als een waarschuwing voor alle overheden om niet te snel een app te willen bouwen. In een persverklaring schrijft de organisatie dat ze bezorgd is over de snelheid waarmee er aan apps wordt gewerkt, onder meer Nederland wordt bij naam genoemd.
+Waar Qatar gebruikmaakt van een centrale database en naast bluetooth werkt met gps-locaties, is het de bedoeling dat de data op de Nederlandse app blijven en dat er alleen gebruik wordt gemaakt van bluetooth.
+Amnesty International meldde het lek vorige week donderdag aan de Qatarese autoriteiten. Een dag later was het niet meer mogelijk om namen en locatiedata op te vragen, aldus de organisatie. Afgelopen zondag is er een extra beveiligingslaag toegevoegd, al kan Amnesty niet zeggen of die wel aan standaarden voldoet.
+App verplicht
+De mensenrechtenorganisatie is "erkentelijk" voor de snelheid waarmee het probleem werd opgelost, maar wijst erop dat het een groot probleem was. "De zwakheid is vooral zorgelijk, omdat de app sinds afgelopen vrijdag verplicht is", zegt Claudio Guarnieri van Amnesty.
+De app in Qatar is meer dan een miljoen keer gedownload uit de Google Play Store. Wie de app niet gebruikt, kan tot drie jaar celstraf krijgen en een boete van omgerekend 50.000 euro.

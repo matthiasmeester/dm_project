@@ -1,0 +1,6 @@
+Laptops en andere computers zijn te kraken via de zogenoemde Thunderbolt-aansluiting. Via die aansluiting kunnen externe harde schijven en andere apparaten worden aangesloten.
+De ontdekking werd gedaan door een student van de TU Eindhoven, Björn Ruytenberg. Een goed voorbereide hacker zou binnen vijf minuten toegang kunnen krijgen tot een laptop van een slachtoffer.
+Daarvoor moet de aanvaller wel fysiek bij de laptop kunnen om de achterkant van de laptop open te schroeven. Daarna kan een apparaatje worden aangesloten, de laptop worden gehackt en de achterkant van de laptop weer worden bevestigd.
+Voor de meeste computergebruikers is dat geen reëel risico. Maar voor mensenrechtenactivisten en journalisten, zeker in landen met een slechte mensenrechtensituatie, kan dit een gevaar betekenen.
+Een oplossing is er niet, dus Ruytenberg kan alleen adviseren om de Thunderbolt-aansluitingen tijdelijk uit te zetten. Alle computers met Thunderbolt die tussen 2011 en 2020 zijn geleverd, zijn kwetsbaar. Dat zijn miljoenen systemen.
+Ruytenberg heeft een programma vrijgegeven waarmee gebruikers kunnen onderzoeken of hun computer is getroffen.
