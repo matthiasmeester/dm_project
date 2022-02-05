@@ -1,7 +1,7 @@
 import pathlib
 import requests
 import os
-import sys
+import re
 
 import pandas as pd
 from tqdm.notebook import tqdm
@@ -125,6 +125,27 @@ def load_nos_texts(dates=[]) -> dict:
                 text_dict[date] = load_articles(articles_path=f"{base_path}{date}")
 
     return text_dict
+
+
+def get_sentences(string_of_text: list):
+    sentences = re.split(r'(?<![A-Z][a-z]\.)(?<=\.|\?)\s(?<!\w\.\w.\s)', string_of_text)
+
+    for sentence in sentences.copy():
+        if not sentence or sentence.isspace() or len(sentence) <= 2:
+            sentences.remove(sentence)
+
+    return sentences
+
+
+def get_average_sentence_length(text: list):
+    sentences = get_sentences(text)
+    total_word_count = 0
+
+    for sentence in sentences:
+        total_word_count += len(sentence.split(' '))
+
+    return total_word_count / len(sentences)
+
 
 #l_of_dates = [x.strftime('%Y-%m-%d') for x in pd.date_range(start='2020-04-01', end='2020-04-30', freq='D')]
 #a = get_article_urls(l_of_dates)
